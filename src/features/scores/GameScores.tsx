@@ -36,7 +36,7 @@ export default function Scores() {
         className={classes.playerGrid}
         justify="center"
         spacing={5}
-        alignItems="center"
+        alignItems="flex-start"
       >
         <Grid item xs={12} md={8}>
           <Scoreboard />

@@ -72,13 +72,12 @@ export const gameSlice = createSlice({
             prevRoundClaims,
           );
           player.active = player.totalScore < MAX_SCORE;
-          player.roundScores.push({
-            freeOfClaims: false,
-            points: 0,
-            action: null,
-          });
         }
-        // TODO: Determine if we should add a round score for inactive players
+        player.roundScores.push({
+          freeOfClaims: !player.active,
+          points: 0,
+          action: null,
+        });
         return player;
       });
 
@@ -117,6 +116,7 @@ export const selectGameHasBegun = (state: RootState) =>
 export const selectRound = (state: RootState) => state.game.claims.length;
 export const selectCurrentDealerIndex = (state: RootState) =>
   state.game.currentDealerIndex;
+export const selectClaims = (state: RootState) => state.game.claims;
 export const selectPlayers = (state: RootState) => state.game.players;
 export const selectCurrentRoundClaims = (state: RootState) =>
   state.game.claims[state.game.claims.length - 1];

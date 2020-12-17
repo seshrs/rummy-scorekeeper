@@ -8,6 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 import { selectPlayers } from '../game/gameSlice';
 import { sortPlayers } from './ScoreUtils';
@@ -19,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
   leader: {
     fontWeight: 'bold',
   },
+  borderRight: {
+    borderRight: `solid 1px ${theme.palette.grey['A100']}`,
+  },
 }));
 
 export default function Leaderboard() {
@@ -28,19 +32,25 @@ export default function Leaderboard() {
 
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="simple table">
+      <Table aria-label="leaderboard">
         <TableHead>
           <TableRow>
-            <TableCell align="center">Rank</TableCell>
-            <TableCell align="center">Player</TableCell>
-            <TableCell align="center">Score</TableCell>
+            <TableCell colSpan={2} align="center">
+              <Typography
+                component="h2"
+                variant="h4"
+                align="center"
+                color="textSecondary"
+              >
+                Leaderboard
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {orderedPlayers.map((player, rank) => (
+          {orderedPlayers.map((player) => (
             <LeaderboardRow
               key={player.id}
-              rank={rank + 1}
               player={player}
               isLeader={player.totalScore === orderedPlayers[0].totalScore}
             />
@@ -51,24 +61,15 @@ export default function Leaderboard() {
   );
 }
 
-function LeaderboardRow(props: {
-  rank: number;
-  isLeader: boolean;
-  player: PlayerType;
-}) {
-  // TODO: Decide whether to display rank
+function LeaderboardRow(props: { isLeader: boolean; player: PlayerType }) {
   const classes = useStyles();
 
   return (
     <TableRow className={props.player.active ? '' : classes.inactivePlayer}>
       <TableCell
-        className={props.isLeader ? classes.leader : ''}
-        align="center"
-      >
-        {props.rank}
-      </TableCell>
-      <TableCell
-        className={props.isLeader ? classes.leader : ''}
+        className={`${props.isLeader ? classes.leader : ''} ${
+          classes.borderRight
+        }`}
         align="center"
         scope="row"
       >
