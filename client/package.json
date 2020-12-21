@@ -2,6 +2,7 @@
   "name": "rummy-scorekeeper",
   "version": "0.0.2",
   "private": true,
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
