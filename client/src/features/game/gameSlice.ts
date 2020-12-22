@@ -120,6 +120,14 @@ export const selectClaims = (state: RootState) => state.game.claims;
 export const selectPlayers = (state: RootState) => state.game.players;
 export const selectCurrentRoundClaims = (state: RootState) =>
   state.game.claims[state.game.claims.length - 1];
+export const selectNumActivePlayers = (state: RootState) =>
+  state.game.players.reduce(
+    (numActivePlayers, player) =>
+      player.active ? numActivePlayers + 1 : numActivePlayers,
+    0,
+  );
+export const selectIsGameOver = (state: RootState) =>
+  selectNumActivePlayers(state) === 1;
 export const selectCurrentRoundOver = (state: RootState) => {
   const currentRoundIndex = selectRound(state) - 1;
   return state.game.players.some(

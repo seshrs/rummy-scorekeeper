@@ -13,6 +13,7 @@ import {
   selectPlayers,
   selectRound,
   selectCurrentDealerIndex,
+  selectIsGameOver,
 } from './gameSlice';
 import GameInputPlayerCard from './GameInputPlayerCard';
 
@@ -30,6 +31,7 @@ export default function GameRoundInput() {
   const round = useSelector(selectRound);
   const players = useSelector(selectPlayers);
   const isRoundOver = useSelector(selectCurrentRoundOver);
+  const isGameOver = useSelector(selectIsGameOver);
   const areCurrentRoundScoresValid = useSelector(
     selectAreCurrentRoundScoresValid,
   );
@@ -41,6 +43,7 @@ export default function GameRoundInput() {
       <GameInputPlayerCard
         player={player}
         isDealer={i === currentDealerIndex}
+        isGameOver={isGameOver}
       />
     </Grid>
   ));

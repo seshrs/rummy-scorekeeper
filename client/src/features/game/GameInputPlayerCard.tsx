@@ -22,6 +22,7 @@ import {
 type PropsType = {
   player: PlayerType;
   isDealer?: boolean;
+  isGameOver?: boolean;
 };
 
 const stateStrings = {
@@ -63,15 +64,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function GameInputPlayerCard(props: PropsType) {
-  return props.player.active ? (
-    <ActivePlayer {...props} />
-  ) : (
-    <InactivePlayer {...props} />
-  );
+  if (!props.player.active) {
+    return <InactivePlayer {...props} />;
+  } else if (props.isGameOver) {
+    return <WinnerPlayer {...props} />;
+  } else {
+    return <ActivePlayer {...props} />;
+  }
 }
 
-function ActivePlayer({ player, isDealer }: PropsType) {
-  // TODO: If free of claims, then point input box should be zero and disabled.
+function ActivePlayer({ player, isDealer, isGameOver }: PropsType) {
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -276,6 +278,33 @@ function InactivePlayer({ player }: PropsType) {
             <li>
               <Typography component="h3" variant="h6" color="textSecondary">
                 Out
+              </Typography>
+            </li>
+          </ul>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function WinnerPlayer({ player }: PropsType) {
+  const classes = useStyles();
+  return (
+    <Card className={classes.cardWin}>
+      <CardContent>
+        <div className={classes.cardPlayer}>
+          <ul>
+            <li>
+              <Typography component="h2" variant="h5" color="textPrimary">
+                {player.name}
+              </Typography>
+            </li>
+            <li>
+              <Typography component="h3" variant="h6" color="textSecondary">
+                Winner!{' '}
+                <span role="img" aria-label="Hooray!">
+                  🎉
+                </span>
               </Typography>
             </li>
           </ul>
