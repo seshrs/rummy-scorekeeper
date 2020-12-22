@@ -85,23 +85,34 @@ function ScoreboardRow(props: {
         {props.claims}
       </TableCell>
       {props.scores.map((score, i) => {
-        console.log(score.points);
         if (props.round > players[i].lastRoundPlayed) {
           return (
-            <TableCell className={classes.inactivePlayerScore} align="center" />
+            <TableCell
+              key={i}
+              className={classes.inactivePlayerScore}
+              align="center"
+            />
           );
         }
         if (score.action === 'win') {
           return (
-            <TableCell className={classes.winnerScore} align="center">
+            <TableCell key={i} className={classes.winnerScore} align="center">
               D
             </TableCell>
           );
         }
         if (score.freeOfClaims || score.points == null) {
-          return <TableCell align="center">F</TableCell>;
+          return (
+            <TableCell key={i} align="center">
+              F
+            </TableCell>
+          );
         }
-        return <TableCell align="center">{score.points}</TableCell>;
+        return (
+          <TableCell key={i} align="center">
+            {score.points}
+          </TableCell>
+        );
       })}
     </TableRow>
   );
