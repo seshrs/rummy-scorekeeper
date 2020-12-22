@@ -9,11 +9,15 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import green from '@material-ui/core/colors/green';
 
-import { selectPlayers } from '../game/gameSlice';
+import { selectPlayers, selectIsGameOver } from '../game/gameSlice';
 import { sortPlayers } from './ScoreUtils';
 
 const useStyles = makeStyles((theme) => ({
+  winner: {
+    backgroundColor: green[50],
+  },
   inactivePlayer: {
     backgroundColor: theme.palette.grey[300],
   },
@@ -27,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Leaderboard() {
   const players = useSelector(selectPlayers);
+  const isGameOver = useSelector(selectIsGameOver);
 
   const orderedPlayers = sortPlayers(players);
 
@@ -48,37 +53,45 @@ export default function Leaderboard() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {orderedPlayers.map((player) => (
-            <LeaderboardRow
-              key={player.id}
-              player={player}
-              isLeader={player.totalScore === orderedPlayers[0].totalScore}
-            />
-          ))}
+          {orderedPlayers.map((player) => {
+            const isLeader = player.totalScore === orderedPlayers[0].totalScore;
+            return (
+              <LeaderboardRow
+                key={player.id}
+                player={player}
+                isLeader={isLeader}
+                isWinner={isLeader && isGameOver}
+              />
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
   );
 }
 
-function LeaderboardRow(props: { isLeader: boolean; player: PlayerType }) {
+function LeaderboardRow(props: {
+  isLeader: boolean;
+  isWinner: boolean;
+  player: PlayerType;
+}) {
   const classes = useStyles();
+  const tableCellClassNames = [
+    props.isLeader ? classes.leader : null,
+    props.isWinner ? classes.winner : null,
+    classes.borderRight,
+  ];
 
   return (
     <TableRow className={props.player.active ? '' : classes.inactivePlayer}>
       <TableCell
-        className={`${props.isLeader ? classes.leader : ''} ${
-          classes.borderRight
-        }`}
+        className={[...tableCellClassNames, classes.borderRight].join(' ')}
         align="center"
         scope="row"
       >
         {props.player.name}
       </TableCell>
-      <TableCell
-        className={props.isLeader ? classes.leader : ''}
-        align="center"
-      >
+      <TableCell className={tableCellClassNames.join(' ')} align="center">
         {props.player.totalScore}
       </TableCell>
     </TableRow>
