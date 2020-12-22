@@ -42,6 +42,10 @@ export default function App() {
   const dispatch = useDispatch();
   const [tabValue, setTabValue] = React.useState(0);
 
+  React.useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [tabValue]);
+
   const gameHasBegun = useSelector(selectGameHasBegun);
 
   const handleChangeTabs = (
@@ -83,7 +87,7 @@ export default function App() {
     <>
       <CssBaseline />
       <AppBar
-        position="static"
+        position="sticky"
         color="default"
         elevation={0}
         className={classes.appBar}

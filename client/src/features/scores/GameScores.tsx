@@ -9,7 +9,7 @@ import Scoreboard from './Scoreboard';
 
 const useStyles = makeStyles((theme) => ({
   heroContent: {
-    padding: theme.spacing(8, 0, 6),
+    padding: theme.spacing(4, 0, 6),
   },
   playerGrid: {
     marginBottom: theme.spacing(2),
