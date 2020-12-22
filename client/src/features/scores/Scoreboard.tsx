@@ -8,7 +8,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import green from '@material-ui/core/colors/green';
 
 import { selectClaims, selectPlayers, selectRound } from '../game/gameSlice';
@@ -97,14 +99,18 @@ function ScoreboardRow(props: {
         if (score.action === 'win') {
           return (
             <TableCell key={i} className={classes.winnerScore} align="center">
-              D
+              <Tooltip title="Winner" placement="right" arrow>
+                <Typography variant="body2">D</Typography>
+              </Tooltip>
             </TableCell>
           );
         }
         if (score.freeOfClaims || score.points == null) {
           return (
             <TableCell key={i} align="center">
-              F
+              <Tooltip title="Free of claims" placement="right" arrow>
+                <Typography variant="body2">F</Typography>
+              </Tooltip>
             </TableCell>
           );
         }
