@@ -11,7 +11,7 @@ import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { setPlayerNames, selectGameHasBegun } from '../features/game/gameSlice';
-import BeginGame from '../features/begin_game/BeginGame';
+import BeginGameView from './BeginGameView';
 import GameRoundInput from '../features/game/GameRoundInput';
 import GameScores from '../features/scores/GameScores';
 
@@ -78,7 +78,7 @@ export default function GameView() {
       </TabPanel>
     </>
   ) : (
-    <BeginGame
+    <BeginGameView
       onBeginGame={(playerNames) => dispatch(setPlayerNames(playerNames))}
     />
   );
