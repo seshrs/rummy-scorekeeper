@@ -103,6 +103,7 @@ export default function GameView() {
             Rummy Scorekeeper
           </Typography>
           {tabs}
+          {/* TODO: Buttons should show only if game started */}
           <Button
             href="#"
             color="primary"
@@ -110,6 +111,14 @@ export default function GameView() {
             className={classes.link}
           >
             Settings
+          </Button>
+          <Button
+            href="#"
+            color="secondary"
+            variant="contained"
+            className={classes.link}
+          >
+            Exit to room
           </Button>
         </Toolbar>
       </AppBar>
