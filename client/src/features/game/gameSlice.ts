@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Chance from 'chance';
 
-import { RootState } from '../../app/store';
-
 type GameStateType = {
   numPlayers: number;
   players: Array<PlayerType>;
@@ -111,32 +109,38 @@ export const {
 } = gameSlice.actions;
 
 // Selectors
-export const selectGameHasBegun = (state: RootState) =>
-  state.game.players.length !== 0;
-export const selectRound = (state: RootState) => state.game.claims.length;
-export const selectCurrentDealerIndex = (state: RootState) =>
-  state.game.currentDealerIndex;
-export const selectClaims = (state: RootState) => state.game.claims;
-export const selectPlayers = (state: RootState) => state.game.players;
-export const selectCurrentRoundClaims = (state: RootState) =>
-  state.game.claims[state.game.claims.length - 1];
-export const selectNumActivePlayers = (state: RootState) =>
-  state.game.players.reduce(
+export const selectGameHasBegun = ({ game }: { game: GameStateType }) =>
+  game.players.length !== 0;
+export const selectRound = ({ game }: { game: GameStateType }) =>
+  game.claims.length;
+export const selectCurrentDealerIndex = ({ game }: { game: GameStateType }) =>
+  game.currentDealerIndex;
+export const selectClaims = ({ game }: { game: GameStateType }) => game.claims;
+export const selectPlayers = ({ game }: { game: GameStateType }) =>
+  game.players;
+export const selectCurrentRoundClaims = ({ game }: { game: GameStateType }) =>
+  game.claims[game.claims.length - 1];
+export const selectNumActivePlayers = ({ game }: { game: GameStateType }) =>
+  game.players.reduce(
     (numActivePlayers, player) =>
       player.active ? numActivePlayers + 1 : numActivePlayers,
     0,
   );
-export const selectIsGameOver = (state: RootState) =>
-  selectNumActivePlayers(state) === 1;
-export const selectCurrentRoundOver = (state: RootState) => {
-  const currentRoundIndex = selectRound(state) - 1;
-  return state.game.players.some(
+export const selectIsGameOver = ({ game }: { game: GameStateType }) =>
+  selectNumActivePlayers({ game }) === 1;
+export const selectCurrentRoundOver = ({ game }: { game: GameStateType }) => {
+  const currentRoundIndex = selectRound({ game }) - 1;
+  return game.players.some(
     (player) => player.roundScores[currentRoundIndex].action === 'win',
   );
 };
-export const selectAreCurrentRoundScoresValid = (state: RootState) => {
-  const currentRoundIndex = selectRound(state) - 1;
-  const winners = state.game.players.filter(
+export const selectAreCurrentRoundScoresValid = ({
+  game,
+}: {
+  game: GameStateType;
+}) => {
+  const currentRoundIndex = selectRound({ game }) - 1;
+  const winners = game.players.filter(
     (player) => player.roundScores[currentRoundIndex].action === 'win',
   );
   if (winners.length !== 1 || !winners[0].active) {
@@ -144,13 +148,13 @@ export const selectAreCurrentRoundScoresValid = (state: RootState) => {
     return false;
   }
   if (
-    state.game.claims[currentRoundIndex] < 0 ||
-    state.game.claims[currentRoundIndex] % 10 !== 0
+    game.claims[currentRoundIndex] < 0 ||
+    game.claims[currentRoundIndex] % 10 !== 0
   ) {
     // The claims should be a non-negative multiple of 10
     return false;
   }
-  for (const player of state.game.players) {
+  for (const player of game.players) {
     if (player.active) {
       const currentScore = player.roundScores[currentRoundIndex];
       if (!currentScore.freeOfClaims && currentScore.points == null) {
