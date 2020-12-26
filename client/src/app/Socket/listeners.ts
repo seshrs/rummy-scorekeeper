@@ -10,6 +10,10 @@ import {
 } from '../../features/game/gameSlice';
 
 export default function registerListeners(socket: typeof Socket) {
+  /****************/
+  /*    VIEWER    */
+  /****************/
+
   socket.on('setGameState', (state: GameStateType) => {
     console.log('remote: setGameState', state);
     if (isScorekeeper()) {
@@ -55,5 +59,21 @@ export default function registerListeners(socket: typeof Socket) {
     }
 
     store.dispatch(startNextRound());
+  });
+
+  /******************/
+  /*  SCOREKEEPER   */
+  /******************/
+
+  socket.on('sendGameState', (viewerSocketId: string) => {
+    console.log('remote: requesting current game state');
+    if (!isScorekeeper()) {
+      console.warn(
+        'Received request for full game state when we are not scorekeeper...',
+      );
+    }
+
+    const gameState = store.getState().game;
+    socket.emit('sendGameState', viewerSocketId, gameState);
   });
 }

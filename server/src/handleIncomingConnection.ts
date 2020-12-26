@@ -9,7 +9,7 @@ const roomIdToAdminSocketId: { [roomId: string]: string } = {};
 const SOCKET_ROOM_PREFIX = 'rummy-room-';
 
 export default function handleIncomingConnection(socket: Socket) {
-  console.log('@@@ received connection from sock id', socket.id);
+  console.log('received connection from sock id', socket.id);
 
   socket.on(
     'setRoomId',
@@ -32,6 +32,13 @@ export default function handleIncomingConnection(socket: Socket) {
         // There's currently an admin, so make this socket a viewer
         ack({ role: 'viewer' });
         console.log('  joined room as viewer');
+
+        // We also need to request the room's scorekeeper to send the current
+        // state to this viewer.
+        console.log('  requesting game state from scorekeeper...');
+        socket
+          .to(roomIdToAdminSocketId[mangledRoomId])
+          .emit('sendGameState', socket.id);
       } else {
         // Set this socket as the room's admin
         roomIdToAdminSocketId[mangledRoomId] = socket.id;
@@ -52,6 +59,24 @@ export default function handleIncomingConnection(socket: Socket) {
   });
   socket.on('startNextRound', (...args: any[]) => {
     forwardEvent(socket, 'startNextRound', ...args);
+  });
+
+  socket.on('sendGameState', (socketId: string, state: any) => {
+    console.log(
+      'received game state: from scorekeeper',
+      state,
+      ' for viewer socket id',
+      socketId,
+    );
+    // Verify that this socket is the admin of its room
+    const roomId = getRoomId(socket);
+    if (!roomIdToAdminSocketId[roomId]) {
+      console.log('  ignoring request since not scorekeeper');
+      return;
+    }
+
+    socket.to(socketId).emit('setGameState', state);
+    console.log('  emitted to the viewer socket');
   });
 }
 

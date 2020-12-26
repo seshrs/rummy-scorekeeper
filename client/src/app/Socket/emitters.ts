@@ -15,6 +15,10 @@ export function joinRoom(
   });
 }
 
+/******************/
+/*  SCOREKEEPER   */
+/******************/
+
 export function setGameState(state: GameStateType) {
   emit('setGameState', state);
 }
