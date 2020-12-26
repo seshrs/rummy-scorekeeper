@@ -106,7 +106,7 @@ export default function BeginGame(props: PropsType) {
               color="primary"
               size="large"
               onClick={onBeginGame}
-              disabled={players.length === 0}
+              disabled={players.length < 2}
             >
               Begin game
             </Button>
