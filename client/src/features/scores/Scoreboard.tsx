@@ -11,6 +11,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteForever from '@material-ui/icons/DeleteForever';
 import green from '@material-ui/core/colors/green';
 
 import { selectClaims, selectPlayers, selectRound } from '../game/gameSlice';
@@ -24,6 +26,13 @@ const useStyles = makeStyles((theme) => ({
   },
   borderRight: {
     borderRight: `solid 1px ${theme.palette.grey['A100']}`,
+  },
+  floatLeftButton: {
+    float: 'left',
+  },
+  roundTextWithButton: {
+    padding: '12px',
+    marginRight: '35px',
   },
 }));
 
@@ -78,10 +87,24 @@ function ScoreboardRow(props: {
 }) {
   const classes = useStyles();
   const players = useSelector(selectPlayers);
+  const lastPlayedRound = useSelector(selectRound) - 1;
   return (
     <TableRow>
       <TableCell className={classes.borderRight} align="center">
-        {props.round}
+        {lastPlayedRound === props.round ? (
+          <>
+            <IconButton
+              className={classes.floatLeftButton}
+              color="secondary"
+              aria-label="delete last round scores"
+            >
+              <DeleteForever />
+            </IconButton>
+            <div className={classes.roundTextWithButton}>{props.round}</div>
+          </>
+        ) : (
+          props.round
+        )}
       </TableCell>
       <TableCell className={classes.borderRight} align="center">
         {props.claims}
