@@ -120,6 +120,13 @@ export const gameSlice = createSlice({
         }
         return player;
       });
+
+      Remote.setGameState({
+        numPlayers: state.numPlayers,
+        players: [...state.players],
+        claims: [...state.claims],
+        currentDealerIndex: 0,
+      });
     },
 
     /**

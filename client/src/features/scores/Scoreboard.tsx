@@ -22,6 +22,8 @@ import {
   deleteLastRound,
 } from '../game/gameSlice';
 
+import { selectClientRole } from '../room/roomSlice';
+
 const useStyles = makeStyles((theme) => ({
   inactivePlayerScore: {
     backgroundColor: theme.palette.grey[300],
@@ -94,10 +96,12 @@ function ScoreboardRow(props: {
   const dispatch = useDispatch();
   const players = useSelector(selectPlayers);
   const lastPlayedRound = useSelector(selectRound) - 1;
+  const isScorekeeper = useSelector(selectClientRole) === 'scorekeeper';
+
   return (
     <TableRow>
       <TableCell className={classes.borderRight} align="center">
-        {lastPlayedRound === props.round ? (
+        {isScorekeeper && lastPlayedRound === props.round ? (
           <>
             <IconButton
               className={classes.floatLeftButton}
