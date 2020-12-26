@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -15,7 +15,12 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import green from '@material-ui/core/colors/green';
 
-import { selectClaims, selectPlayers, selectRound } from '../game/gameSlice';
+import {
+  selectClaims,
+  selectPlayers,
+  selectRound,
+  deleteLastRound,
+} from '../game/gameSlice';
 
 const useStyles = makeStyles((theme) => ({
   inactivePlayerScore: {
@@ -86,6 +91,7 @@ function ScoreboardRow(props: {
   scores: Array<RoundScoreType>;
 }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const players = useSelector(selectPlayers);
   const lastPlayedRound = useSelector(selectRound) - 1;
   return (
@@ -97,6 +103,7 @@ function ScoreboardRow(props: {
               className={classes.floatLeftButton}
               color="secondary"
               aria-label="delete last round scores"
+              onClick={() => dispatch(deleteLastRound())}
             >
               <DeleteForever />
             </IconButton>

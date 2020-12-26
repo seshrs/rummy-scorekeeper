@@ -90,6 +90,41 @@ export const gameSlice = createSlice({
       Remote.startNextRound();
     },
 
+    deleteLastRound: (state) => {
+      state.claims.pop();
+      const newCurrentRound = state.claims.length;
+
+      do {
+        state.currentDealerIndex = state.currentDealerIndex - 1;
+        if (state.currentDealerIndex < 0) {
+          state.currentDealerIndex = state.players.length - 1;
+        }
+      } while (!state.players[state.currentDealerIndex].active);
+
+      state.players = state.players.map((player) => {
+        player.roundScores.pop();
+
+        if (player.lastRoundPlayed !== newCurrentRound) {
+          // The player was not active in the newCurrentRound
+          // so do nothing.
+        } else {
+          player.lastRoundPlayed -= 1;
+        }
+
+        const score = player.roundScores[newCurrentRound - 1];
+        const deletedClaims = state.claims[newCurrentRound - 1];
+        if (!score.freeOfClaims && score.action !== 'win') {
+          player.totalScore -= score.points || 0;
+          player.totalScore -= deletedClaims || 0;
+          player.active = player.totalScore < MAX_SCORE;
+        }
+        return player;
+      });
+    },
+
+    /**
+     * Consider using other reducers instead, this is meant for remote updates.
+     */
     setGameState: (state, { payload }: PayloadAction<GameStateType>) => {
       state.numPlayers = payload.numPlayers;
       state.players = payload.players;
@@ -118,6 +153,7 @@ export const {
   setClaimsForCurrentRound,
   setPlayerScoreForCurrentRound,
   startNextRound,
+  deleteLastRound,
   setGameState,
 } = gameSlice.actions;
 
