@@ -1,50 +1,49 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+import { joinRoom } from '../../app/Socket';
 
 type RoomStateType = {
   id: string;
-  roomReady: boolean;
-  players: Array<string>;
+  role: ClientRole;
+  serverStatus: ServerResponseStatus;
 };
 
 const initialState: RoomStateType = {
   id: '',
-  roomReady: false,
-  players: [],
+  role: 'viewer',
+  serverStatus: 'ready',
 };
+
+export const setRoomId = createAsyncThunk('room/setRoomId', joinRoom);
 
 export const roomSlice = createSlice({
   name: 'room',
   initialState,
-  reducers: {
-    setRoomId: (state, { payload }: PayloadAction<string>) => {
-      if (payload !== '') {
-        state.id = payload;
-        state.roomReady = true;
-        state.players = [
-          'Player 1',
-          'Player 2',
-          'Player 3',
-          'Player 4',
-          'Player 5',
-          'Player 6',
-          'Player 7',
-          'Player 8',
-        ]; // TODO: Need to fetch this from server
-      }
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(setRoomId.fulfilled, (state, { payload }) => {
+      state.id = payload.roomId;
+      state.role = payload.role;
+      state.serverStatus = 'ready';
+    });
+    builder.addCase(setRoomId.pending, (state) => {
+      state.serverStatus = 'pending';
+    });
+    builder.addCase(setRoomId.rejected, (state) => {
+      console.error('roomSlice: Failed to set room ID due to server error');
+      state.serverStatus = 'ready';
+      state.id = '';
+      state.role = 'viewer';
+    });
   },
 });
 
-export const { setRoomId } = roomSlice.actions;
-
 // Selectors
-export const selectRoomReady = ({ room }: { room: RoomStateType }) =>
-  room.roomReady && room.id !== '' && room.players.length !== 0;
-export const selectRoomPlayers = ({ room }: { room: RoomStateType }) => {
-  if (!selectRoomReady({ room })) {
-    throw new Error('selectRoomPlayers called before room was ready');
-  }
-  return room.players;
-};
+export const selectRoomId = ({ room }: { room: RoomStateType }) =>
+  room.id !== '' && room.serverStatus === 'ready' ? room.id : null;
+export const selectIsServerPending = ({ room }: { room: RoomStateType }) =>
+  room.serverStatus === 'pending';
+export const selectClientRole = ({ room }: { room: RoomStateType }) =>
+  selectRoomId({ room }) == null ? null : room.role;
 
 export default roomSlice.reducer;

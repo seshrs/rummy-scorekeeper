@@ -11,7 +11,7 @@ import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { setPlayerNames, selectGameHasBegun } from '../features/game/gameSlice';
-import BeginGameView from './BeginGameView';
+import BeginGameView from '../features/begin_game/BeginGame';
 import GameRoundInput from '../features/game/GameRoundInput';
 import GameScores from '../features/scores/GameScores';
 
@@ -118,7 +118,7 @@ export default function GameView() {
             variant="contained"
             className={classes.link}
           >
-            Exit to room
+            Exit room
           </Button>
         </Toolbar>
       </AppBar>

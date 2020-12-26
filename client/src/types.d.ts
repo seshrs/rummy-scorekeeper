@@ -19,3 +19,7 @@ declare type PlayerScoreUpdatePayloadType = {
   id: string;
   score: RoundScoreType;
 };
+
+declare type ServerResponseStatus = 'ready' | 'pending';
+
+declare type ClientRole = 'scorekeeper' | 'viewer';

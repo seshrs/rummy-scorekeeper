@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { setRoomId } from '../features/room/roomSlice';
+import { setRoomId, selectIsServerPending } from '../features/room/roomSlice';
 
 const useStyles = makeStyles((theme) => ({
   heroContent: {
@@ -20,7 +20,25 @@ export default function SelectRoomView() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [roomId, setRoomIdState] = React.useState('');
+  const isServerPending = useSelector(selectIsServerPending);
+
   const onSubmit = () => dispatch(setRoomId(roomId));
+
+  const button = isServerPending ? (
+    <Button variant="contained" color="primary" size="large" disabled>
+      Joining room...
+    </Button>
+  ) : (
+    <Button
+      variant="contained"
+      color="primary"
+      size="large"
+      onClick={() => onSubmit()}
+      disabled={roomId.length === 0}
+    >
+      Join room
+    </Button>
+  );
 
   return (
     <>
@@ -69,18 +87,7 @@ export default function SelectRoomView() {
                   variant="outlined"
                 />
               </Grid>
-              <Grid item>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  onClick={() => onSubmit()}
-                  disabled={roomId.length === 0}
-                >
-                  Join room
-                </Button>
-              </Grid>
+              <Grid item>{button}</Grid>
             </Grid>
           </form>
         </Container>
