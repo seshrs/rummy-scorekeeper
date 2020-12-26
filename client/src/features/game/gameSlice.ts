@@ -1,12 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Chance from 'chance';
 
-type GameStateType = {
-  numPlayers: number;
-  players: Array<PlayerType>;
-  claims: Array<number>;
-  currentDealerIndex: number;
-};
+import * as Remote from '../../app/Socket/emitters';
 
 const MAX_SCORE = 500;
 const chance = new Chance();
@@ -33,10 +28,17 @@ export const gameSlice = createSlice({
         totalScore: 0,
       }));
       state.claims = [0];
+      Remote.setGameState({
+        numPlayers: state.numPlayers,
+        players: [...state.players],
+        claims: [0],
+        currentDealerIndex: 0,
+      });
     },
 
     setClaimsForCurrentRound: (state, { payload }: PayloadAction<number>) => {
       state.claims[state.claims.length - 1] = payload;
+      Remote.setClaimsForCurrentRound(payload);
     },
 
     setPlayerScoreForCurrentRound: (
@@ -53,6 +55,7 @@ export const gameSlice = createSlice({
       }
       state.players[playerIndex].roundScores.pop();
       state.players[playerIndex].roundScores.push(payload.score);
+      Remote.setPlayerScoreForCurrentRound(payload);
     },
 
     startNextRound: (state) => {
@@ -83,6 +86,15 @@ export const gameSlice = createSlice({
         state.currentDealerIndex =
           (state.currentDealerIndex + 1) % state.numPlayers;
       } while (!state.players[state.currentDealerIndex].active);
+
+      Remote.startNextRound();
+    },
+
+    setGameState: (state, { payload }: PayloadAction<GameStateType>) => {
+      state.numPlayers = payload.numPlayers;
+      state.players = payload.players;
+      state.claims = payload.claims;
+      state.currentDealerIndex = payload.currentDealerIndex;
     },
   },
 });
@@ -106,6 +118,7 @@ export const {
   setClaimsForCurrentRound,
   setPlayerScoreForCurrentRound,
   startNextRound,
+  setGameState,
 } = gameSlice.actions;
 
 // Selectors

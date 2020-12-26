@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { joinRoom } from '../../app/Socket';
+import { joinRoom } from '../../app/Socket/emitters';
 
 type RoomStateType = {
   id: string;

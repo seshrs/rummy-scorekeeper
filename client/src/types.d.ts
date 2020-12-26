@@ -20,6 +20,13 @@ declare type PlayerScoreUpdatePayloadType = {
   score: RoundScoreType;
 };
 
+type GameStateType = {
+  numPlayers: number;
+  players: Array<PlayerType>;
+  claims: Array<number>;
+  currentDealerIndex: number;
+};
+
 declare type ServerResponseStatus = 'ready' | 'pending';
 
 declare type ClientRole = 'scorekeeper' | 'viewer';
