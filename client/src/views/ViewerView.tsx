@@ -10,6 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import GameScores from '../features/scores/GameScores';
 import { selectRound } from '../features/game/gameSlice';
+import { upgradeToScorekeeper } from '../app/Socket/emitters';
+import Cmd from '../utils/Cmd';
 
 const useStyles = makeStyles((theme) => ({
   heroContent: {
@@ -53,12 +55,21 @@ export default function ViewerView() {
             Rummy Scorekeeper
           </Typography>
           <Button
-            href="#"
             color="secondary"
             variant="contained"
             className={classes.link}
+            onClick={() =>
+              Cmd.openModal({
+                title: 'Take over the room?',
+                description:
+                  'If you take over the room, you can enter scores for the room. The current scorekeeper will be downgraded into a "viewer".',
+                cancelText: 'Cancel',
+                okText: 'Become scorekeeper',
+                onOk: () => upgradeToScorekeeper(),
+              })
+            }
           >
-            Exit room
+            Take Over
           </Button>
         </Toolbar>
       </AppBar>

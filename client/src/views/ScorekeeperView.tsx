@@ -112,14 +112,6 @@ export default function GameView() {
           >
             Settings
           </Button>
-          <Button
-            href="#"
-            color="secondary"
-            variant="contained"
-            className={classes.link}
-          >
-            Exit room
-          </Button>
         </Toolbar>
       </AppBar>
 

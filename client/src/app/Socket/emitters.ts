@@ -44,3 +44,11 @@ function emit(event: string, ...args: any[]) {
   const socket = require('./index.ts').default;
   socket.emit(event, ...args);
 }
+
+/*****************/
+/*    VIEWER     */
+/*****************/
+
+export function upgradeToScorekeeper() {
+  // TODO:
+}
