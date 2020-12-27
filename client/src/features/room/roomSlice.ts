@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { joinRoom } from '../../app/Socket/emitters';
+import {
+  joinRoom,
+  upgradeToScorekeeper,
+  requestGameState,
+} from '../../app/Socket/emitters';
 
 type RoomStateType = {
   id: string;
@@ -15,11 +19,20 @@ const initialState: RoomStateType = {
 };
 
 export const setRoomId = createAsyncThunk('room/setRoomId', joinRoom);
+export const setRoleToScorekeeper = createAsyncThunk(
+  'room/setRoleToScorekeeper',
+  upgradeToScorekeeper,
+);
 
 export const roomSlice = createSlice({
   name: 'room',
   initialState,
-  reducers: {},
+  reducers: {
+    setRoleToViewer: (state) => {
+      state.role = 'viewer';
+      requestGameState();
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(setRoomId.fulfilled, (state, { payload }) => {
       state.id = payload.roomId;
@@ -35,8 +48,17 @@ export const roomSlice = createSlice({
       state.id = '';
       state.role = 'viewer';
     });
+
+    builder.addCase(setRoleToScorekeeper.fulfilled, (state) => {
+      state.role = 'scorekeeper';
+    });
+    builder.addCase(setRoleToScorekeeper.rejected, () => {
+      console.log('roomSlice: Failed to upgrade to scorekeeper');
+    });
   },
 });
+
+export const { setRoleToViewer } = roomSlice.actions;
 
 // Selectors
 export const selectRoomId = ({ room }: { room: RoomStateType }) =>

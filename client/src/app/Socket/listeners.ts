@@ -8,6 +8,8 @@ import {
   setPlayerScoreForCurrentRound,
   startNextRound,
 } from '../../features/game/gameSlice';
+import { setRoleToViewer } from '../../features/room/roomSlice';
+import Storage from '../../utils/Storage';
 
 export default function registerListeners(socket: typeof Socket) {
   /****************/
@@ -75,5 +77,17 @@ export default function registerListeners(socket: typeof Socket) {
 
     const gameState = store.getState().game;
     socket.emit('sendGameState', viewerSocketId, gameState);
+  });
+
+  socket.on('downgradeToViewer', () => {
+    console.log('remote: directing us to downgrade to viewer');
+    if (!isScorekeeper()) {
+      console.warn(
+        'Received request to downgrade when we are not scorekeeper...',
+      );
+    }
+
+    Storage.set('role', 'viewer');
+    store.dispatch(setRoleToViewer());
   });
 }

@@ -49,6 +49,34 @@ function emit(event: string, ...args: any[]) {
 /*    VIEWER     */
 /*****************/
 
-export function upgradeToScorekeeper() {
-  // TODO:
+export function upgradeToScorekeeper(): Promise<void> {
+  if (isScorekeeper()) {
+    console.warn(
+      'attempted to upgrade to scorekeeper even though we are scorekeeper...',
+    );
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve) => {
+    console.log('sending intent-to-upgrade notice...');
+    const socket = require('./index.ts').default;
+    socket.emit('upgradeToScorekeeper', () => {
+      console.log('upgrading to scorekeeper...');
+      Storage.set('role', 'scorekeeper');
+      resolve();
+    });
+  });
+}
+
+export function requestGameState() {
+  if (isScorekeeper()) {
+    console.warn(
+      'attempted to fetch game state even though we are scorekeeper...',
+    );
+    return;
+  }
+
+  console.log('sending request for game state');
+  const socket = require('./index.ts').default;
+  socket.emit('requestGameState');
 }

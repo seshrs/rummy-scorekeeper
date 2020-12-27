@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import GameScores from '../features/scores/GameScores';
 import { selectRound } from '../features/game/gameSlice';
-import { upgradeToScorekeeper } from '../app/Socket/emitters';
+import { setRoleToScorekeeper } from '../features/room/roomSlice';
 import Cmd from '../utils/Cmd';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ViewerView() {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const areScoresAvailable = useSelector(selectRound) > 1;
 
   return (
@@ -65,7 +66,7 @@ export default function ViewerView() {
                   'If you take over the room, you can enter scores for the room. The current scorekeeper will be downgraded into a "viewer".',
                 cancelText: 'Cancel',
                 okText: 'Become scorekeeper',
-                onOk: () => upgradeToScorekeeper(),
+                onOk: () => dispatch(setRoleToScorekeeper()),
               })
             }
           >

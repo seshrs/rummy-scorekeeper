@@ -49,16 +49,16 @@ export default function handleIncomingConnection(socket: Socket) {
   );
 
   socket.on('setGameState', (...args: any[]) => {
-    forwardEvent(socket, 'setGameState', ...args);
+    forwardEventToScorekeeper(socket, 'setGameState', ...args);
   });
   socket.on('setClaimsForCurrentRound', (...args: any[]) => {
-    forwardEvent(socket, 'setClaimsForCurrentRound', ...args);
+    forwardEventToScorekeeper(socket, 'setClaimsForCurrentRound', ...args);
   });
   socket.on('setPlayerScoreForCurrentRound', (...args: any[]) => {
-    forwardEvent(socket, 'setPlayerScoreForCurrentRound', ...args);
+    forwardEventToScorekeeper(socket, 'setPlayerScoreForCurrentRound', ...args);
   });
   socket.on('startNextRound', (...args: any[]) => {
-    forwardEvent(socket, 'startNextRound', ...args);
+    forwardEventToScorekeeper(socket, 'startNextRound', ...args);
   });
 
   socket.on('sendGameState', (socketId: string, state: any) => {
@@ -70,13 +70,41 @@ export default function handleIncomingConnection(socket: Socket) {
     );
     // Verify that this socket is the admin of its room
     const roomId = getRoomId(socket);
-    if (!roomIdToAdminSocketId[roomId]) {
+    if (roomIdToAdminSocketId[roomId] !== socket.id) {
       console.log('  ignoring request since not scorekeeper');
       return;
     }
 
     socket.to(socketId).emit('setGameState', state);
     console.log('  emitted to the viewer socket');
+  });
+
+  socket.on('fetchGameState', () => {
+    console.log('received fetchGameState request from ', socket.id);
+    const roomId = getRoomId(socket);
+    const currentScorekeeper = roomIdToAdminSocketId[roomId];
+    if (currentScorekeeper === socket.id) {
+      console.log('  ignoring request since it is a scorekeeper');
+      return;
+    }
+    // We need to request the room's scorekeeper to send the current
+    // state to this viewer.
+    console.log('  requesting game state from scorekeeper...');
+    socket.to(roomIdToAdminSocketId[roomId]).emit('sendGameState', socket.id);
+  });
+
+  socket.on('upgradeToScorekeeper', (ack: () => void) => {
+    console.log('received upgrade-to-scorekeeper request from ', socket.id);
+    const roomId = getRoomId(socket);
+    const currentScorekeeper = roomIdToAdminSocketId[roomId];
+    if (currentScorekeeper === socket.id) {
+      console.log('  ignoring request since it is a scorekeeper');
+      return;
+    }
+
+    socket.to(currentScorekeeper).emit('downgradeToViewer');
+    roomIdToAdminSocketId[roomId] = socket.id;
+    ack();
   });
 }
 
@@ -97,12 +125,16 @@ function getRoomId(socket: Socket) {
   return rummyRooms[0];
 }
 
-function forwardEvent(socket: Socket, event: string, ...args: any[]) {
+function forwardEventToScorekeeper(
+  socket: Socket,
+  event: string,
+  ...args: any[]
+) {
   console.log('Socket ', socket.id, ' with args ', args);
 
   // Verify that this socket is the admin of its room
   const roomId = getRoomId(socket);
-  if (!roomIdToAdminSocketId[roomId]) {
+  if (roomIdToAdminSocketId[roomId] != socket.id) {
     console.log('  ignoring request since not scorekeeper');
     return;
   }
