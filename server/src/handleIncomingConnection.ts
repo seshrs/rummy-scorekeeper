@@ -11,6 +11,10 @@ const SOCKET_ROOM_PREFIX = 'rummy-room-';
 export default function handleIncomingConnection(socket: Socket) {
   console.log('received connection from sock id', socket.id);
 
+  /*****************/
+  /*  ALL CLIENTS  */
+  /*****************/
+
   socket.on(
     'setRoomId',
     (roomId: string, ack: (msg: JoinRoomAckType) => void) => {
@@ -48,17 +52,25 @@ export default function handleIncomingConnection(socket: Socket) {
     },
   );
 
+  /**********************/
+  /*  FROM SCOREKEEPER  */
+  /**********************/
+
   socket.on('setGameState', (...args: any[]) => {
-    forwardEventToScorekeeper(socket, 'setGameState', ...args);
+    forwardEventFromScorekeeper(socket, 'setGameState', ...args);
   });
   socket.on('setClaimsForCurrentRound', (...args: any[]) => {
-    forwardEventToScorekeeper(socket, 'setClaimsForCurrentRound', ...args);
+    forwardEventFromScorekeeper(socket, 'setClaimsForCurrentRound', ...args);
   });
   socket.on('setPlayerScoreForCurrentRound', (...args: any[]) => {
-    forwardEventToScorekeeper(socket, 'setPlayerScoreForCurrentRound', ...args);
+    forwardEventFromScorekeeper(
+      socket,
+      'setPlayerScoreForCurrentRound',
+      ...args,
+    );
   });
   socket.on('startNextRound', (...args: any[]) => {
-    forwardEventToScorekeeper(socket, 'startNextRound', ...args);
+    forwardEventFromScorekeeper(socket, 'startNextRound', ...args);
   });
 
   socket.on('sendGameState', (socketId: string, state: any) => {
@@ -78,6 +90,10 @@ export default function handleIncomingConnection(socket: Socket) {
     socket.to(socketId).emit('setGameState', state);
     console.log('  emitted to the viewer socket');
   });
+
+  /*****************/
+  /*  FROM VIEWER  */
+  /*****************/
 
   socket.on('fetchGameState', () => {
     console.log('received fetchGameState request from ', socket.id);
@@ -125,7 +141,7 @@ function getRoomId(socket: Socket) {
   return rummyRooms[0];
 }
 
-function forwardEventToScorekeeper(
+function forwardEventFromScorekeeper(
   socket: Socket,
   event: string,
   ...args: any[]
@@ -134,7 +150,7 @@ function forwardEventToScorekeeper(
 
   // Verify that this socket is the admin of its room
   const roomId = getRoomId(socket);
-  if (roomIdToAdminSocketId[roomId] != socket.id) {
+  if (roomIdToAdminSocketId[roomId] !== socket.id) {
     console.log('  ignoring request since not scorekeeper');
     return;
   }
