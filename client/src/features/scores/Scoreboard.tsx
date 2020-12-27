@@ -21,8 +21,8 @@ import {
   selectRound,
   deleteLastRound,
 } from '../game/gameSlice';
-
 import { selectClientRole } from '../room/roomSlice';
+import Cmd from '../../utils/Cmd';
 
 const useStyles = makeStyles((theme) => ({
   inactivePlayerScore: {
@@ -107,7 +107,17 @@ function ScoreboardRow(props: {
               className={classes.floatLeftButton}
               color="secondary"
               aria-label="delete last round scores"
-              onClick={() => dispatch(deleteLastRound())}
+              onClick={() =>
+                Cmd.openModal({
+                  title: `Delete round ${props.round} scores?`,
+                  description: `If you delete this round, then this round's scores can be changed in the 'Round Input' tab. You will permanently lose any scores entered for round ${
+                    props.round + 1
+                  }.`,
+                  cancelText: 'Cancel',
+                  okText: `Delete round ${props.round} scores`,
+                  onOk: () => dispatch(deleteLastRound()),
+                })
+              }
             >
               <DeleteForever />
             </IconButton>

@@ -30,3 +30,11 @@ type GameStateType = {
 declare type ServerResponseStatus = 'ready' | 'pending';
 
 declare type ClientRole = 'scorekeeper' | 'viewer';
+
+declare type ModalPropsType = {
+  title: string;
+  description: string;
+  cancelText: string;
+  okText: string;
+  onOk: () => void;
+};
