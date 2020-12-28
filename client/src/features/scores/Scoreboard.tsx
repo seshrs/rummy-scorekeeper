@@ -19,6 +19,8 @@ import {
   selectClaims,
   selectPlayers,
   selectRound,
+  selectCurrentDealerIndex,
+  selectIsGameOver,
   deleteLastRound,
 } from '../game/gameSlice';
 import { selectClientRole } from '../room/roomSlice';
@@ -81,6 +83,7 @@ export default function Scoreboard() {
               scores={roundScore}
             />
           ))}
+          <CurrentDealerRow />
         </TableBody>
       </Table>
     </TableContainer>
@@ -164,6 +167,30 @@ function ScoreboardRow(props: {
           </TableCell>
         );
       })}
+    </TableRow>
+  );
+}
+
+function CurrentDealerRow() {
+  const classes = useStyles();
+  const round = useSelector(selectRound);
+  const players = useSelector(selectPlayers);
+  const currentDealerIndex = useSelector(selectCurrentDealerIndex);
+  const isGameOver = useSelector(selectIsGameOver);
+
+  if (isGameOver) {
+    return null;
+  }
+
+  return (
+    <TableRow>
+      <TableCell className={classes.borderRight} align="center">
+        {round}
+      </TableCell>
+      <TableCell colSpan={4} align="center">
+        <Typography color="textSecondary">Current dealer:</Typography>
+        <Typography variant="h6">{players[currentDealerIndex].name}</Typography>
+      </TableCell>
     </TableRow>
   );
 }
