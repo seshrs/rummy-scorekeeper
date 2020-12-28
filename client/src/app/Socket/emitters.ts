@@ -15,6 +15,11 @@ export function joinRoom(
   });
 }
 
+export function leaveRoom(roomId: string) {
+  const socket = require('./index.ts').default;
+  socket.emit('leaveRoom');
+}
+
 /******************/
 /*  SCOREKEEPER   */
 /******************/

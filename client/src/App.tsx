@@ -6,10 +6,21 @@ import SelectRoomView from './views/SelectRoomView';
 import ScorekeeperView from './views/ScorekeeperView';
 import ViewerView from './views/ViewerView';
 import Modal from './views/Modal';
+import { leaveRoom } from './app/Socket/emitters';
 
 export default function App() {
   const roomId = useSelector(selectRoomId);
   const role = useSelector(selectClientRole);
+
+  React.useEffect(() => {
+    if (roomId) {
+      const unloadHandler = () => leaveRoom(roomId);
+      window.addEventListener('beforeunload', unloadHandler);
+      return () => {
+        window.removeEventListener('beforeunload', unloadHandler);
+      };
+    }
+  }, [roomId]);
 
   let view;
   if (!roomId) {

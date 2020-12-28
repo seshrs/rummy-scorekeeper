@@ -52,6 +52,18 @@ export default function handleIncomingConnection(socket: Socket) {
     },
   );
 
+  socket.on('leaveRoom', () => {
+    console.log('Socket ', socket.id, ' requests to leave room');
+    const roomId = getRoomId(socket);
+    console.log('  leaving room ', roomId);
+    socket.leave(roomId);
+
+    if (roomIdToAdminSocketId[roomId] === socket.id) {
+      console.log('  now the room has no scorekeeper');
+      delete roomIdToAdminSocketId[roomId];
+    }
+  });
+
   /**********************/
   /*  FROM SCOREKEEPER  */
   /**********************/
@@ -135,8 +147,10 @@ function getRoomId(socket: Socket) {
   const rummyRooms = [...socket.rooms.keys()].filter((room) =>
     room.startsWith(SOCKET_ROOM_PREFIX),
   );
-  if (rummyRooms.length !== 1) {
+  if (rummyRooms.length > 1) {
     throw new Error('getRoomId expected socket to only be in one room');
+  } else if (rummyRooms.length === 0) {
+    throw new Error('getRoomId expected socket to be in at least one room');
   }
   return rummyRooms[0];
 }
