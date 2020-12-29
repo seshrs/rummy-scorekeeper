@@ -8,7 +8,7 @@ import handleIncomingConnection from './handleIncomingConnection';
 const app = express();
 const server = http.createServer(app);
 const io = new SocketServer(server);
-const PORT = 3001;
+const PORT = process.env.port || 3001;
 
 const clientDir = path.join(__dirname, '../../client/build');
 app.use(express.static(clientDir));
