@@ -14,7 +14,7 @@ ReactDOM.render(
       <Provider store={store}>
         <Routes>
           <Route path="/" element={<SelectRoomView />} />
-          <Route path="/:roomId" element={<ViewContainer />} />
+          <Route path="room/:roomId" element={<ViewContainer />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Provider>

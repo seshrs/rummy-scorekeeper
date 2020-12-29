@@ -10,14 +10,12 @@ type RoomStateType = {
   id: string;
   role: ClientRole;
   serverStatus: ServerResponseStatus;
-  navigateToRoom: boolean;
 };
 
 const initialState: RoomStateType = {
   id: '',
   role: 'viewer',
   serverStatus: 'uninitialized',
-  navigateToRoom: false,
 };
 
 export const setRoomId = createAsyncThunk('room/setRoomId', joinRoom);
@@ -40,7 +38,6 @@ export const roomSlice = createSlice({
       state.id = payload.roomId;
       state.role = payload.role;
       state.serverStatus = 'ready';
-      state.navigateToRoom = true;
     });
     builder.addCase(setRoomId.pending, (state) => {
       state.serverStatus = 'pending';
@@ -73,8 +70,5 @@ export const selectClientRole = ({ room }: { room: RoomStateType }) =>
 
 export const selectServerStatus = ({ room }: { room: RoomStateType }) =>
   room.serverStatus;
-
-export const selectNavigateToRoom = ({ room }: { room: RoomStateType }) =>
-  room.navigateToRoom;
 
 export default roomSlice.reducer;

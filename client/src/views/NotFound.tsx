@@ -10,7 +10,7 @@ const NotFound = () => (
     justify="center"
     style={{ minHeight: '100vh' }}
   >
-    <Grid item xs={3}>
+    <Grid item>
       <Typography align="center" variant="h1">
         Not found!
       </Typography>
