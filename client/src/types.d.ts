@@ -27,7 +27,11 @@ type GameStateType = {
   currentDealerIndex: number;
 };
 
-declare type ServerResponseStatus = 'ready' | 'pending';
+declare type ServerResponseStatus =
+  | 'ready'
+  | 'pending'
+  | 'error'
+  | 'uninitialized';
 
 declare type ClientRole = 'scorekeeper' | 'viewer';
 

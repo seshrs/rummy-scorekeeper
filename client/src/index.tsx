@@ -1,15 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import ViewContainer from './views/ViewContainer';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
+import SelectRoomView from './views/SelectRoomView';
+import NotFound from './views/NotFound';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <BrowserRouter>
+      <Provider store={store}>
+        <Routes>
+          <Route path="/" element={<SelectRoomView />} />
+          <Route path="/:roomId" element={<ViewContainer />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Provider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root'),
 );
