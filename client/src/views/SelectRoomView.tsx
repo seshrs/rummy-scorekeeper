@@ -7,8 +7,12 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-
-import { setRoomId, selectIsServerPending } from '../features/room/roomSlice';
+import { Navigate } from 'react-router-dom';
+import {
+  setRoomId,
+  selectIsServerPending,
+  selectRoomId,
+} from '../features/room/roomSlice';
 
 const useStyles = makeStyles((theme) => ({
   heroContent: {
@@ -20,9 +24,26 @@ export default function SelectRoomView() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [roomId, setRoomIdState] = React.useState('');
+  const [error, setError] = React.useState(false);
   const isServerPending = useSelector(selectIsServerPending);
+  // This is the roomId saved in server and is the source of truth for navigation
+  const savedRoomId = useSelector(selectRoomId);
 
-  const onSubmit = () => dispatch(setRoomId(roomId));
+  const onSubmit = () => {
+    if (!roomId || !roomId.trim()) {
+      setError(true);
+    } else {
+      setError(false);
+      dispatch(setRoomId(roomId));
+    }
+  };
+  const validate = (input: string) => {
+    if (!input || !input.trim()) {
+      setError(true);
+    } else {
+      setError(false);
+    }
+  };
 
   const button = isServerPending ? (
     <Button variant="contained" color="primary" size="large" disabled>
@@ -39,9 +60,9 @@ export default function SelectRoomView() {
       Join room
     </Button>
   );
-
   return (
     <>
+      {savedRoomId && <Navigate to={`room/${savedRoomId}`} />}
       <CssBaseline />
       <main>
         <Container maxWidth="lg" className={classes.heroContent}>
@@ -85,6 +106,9 @@ export default function SelectRoomView() {
                   onChange={(e) => setRoomIdState(e.target.value)}
                   label="Room ID"
                   variant="outlined"
+                  required
+                  onBlur={(e) => validate(e.target.value)}
+                  error={error}
                 />
               </Grid>
               <Grid item>{button}</Grid>

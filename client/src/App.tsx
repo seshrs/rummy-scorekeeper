@@ -1,40 +1,21 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-
-import { selectRoomId, selectClientRole } from './features/room/roomSlice';
+import ViewContainer from './views/ViewContainer';
+import { store } from './app/store';
+import { Provider } from 'react-redux';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SelectRoomView from './views/SelectRoomView';
-import ScorekeeperView from './views/ScorekeeperView';
-import ViewerView from './views/ViewerView';
-import Modal from './views/Modal';
-import { leaveRoom } from './app/Socket/emitters';
+import NotFound from './views/NotFound';
 
-export default function App() {
-  const roomId = useSelector(selectRoomId);
-  const role = useSelector(selectClientRole);
-
-  React.useEffect(() => {
-    if (roomId) {
-      const unloadHandler = () => leaveRoom(roomId);
-      window.addEventListener('beforeunload', unloadHandler);
-      return () => {
-        window.removeEventListener('beforeunload', unloadHandler);
-      };
-    }
-  }, [roomId]);
-
-  let view;
-  if (!roomId) {
-    view = <SelectRoomView />;
-  } else if (role === 'scorekeeper') {
-    view = <ScorekeeperView />;
-  } else {
-    view = <ViewerView />;
-  }
-
+export function App() {
   return (
-    <>
-      {view}
-      <Modal />
-    </>
+    <BrowserRouter>
+      <Provider store={store}>
+        <Routes>
+          <Route path="/" element={<SelectRoomView />} />
+          <Route path="room/:roomId" element={<ViewContainer />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Provider>
+    </BrowserRouter>
   );
 }
