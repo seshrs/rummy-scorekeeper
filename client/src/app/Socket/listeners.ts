@@ -12,6 +12,15 @@ import { setRoleToViewer } from '../../features/room/roomSlice';
 import Storage from '../../utils/Storage';
 
 export default function registerListeners(socket: typeof Socket) {
+  /**************/
+  /*    BOTH    */
+  /**************/
+
+  socket.on('heartbeat:ping', () => {
+    console.info('heartbeat:ping');
+    socket.emit('heartbeat:pong');
+  });
+
   /****************/
   /*    VIEWER    */
   /****************/
