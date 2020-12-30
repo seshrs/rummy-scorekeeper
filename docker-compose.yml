@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    working_dir: /app
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+    restart: on-failure
+    container_name: react-dev-server
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    working_dir: /app
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    container_name: express-server
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: rummy-scorekeeper
+      POSTGRES_HOST: postgres
+      POSTGRES_URL: postgresql://root:secret@postgres:5432/rummy-scorekeeper?schema=public
+      DEBUG: '*'
+  postgres:
+    image: postgres:latest
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: rummy-scorekeeper
+
+volumes:
+  db-data:
