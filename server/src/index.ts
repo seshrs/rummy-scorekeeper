@@ -2,6 +2,22 @@ import express from 'express';
 import path from 'path';
 import http from 'http';
 import { Server as SocketServer } from 'socket.io';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function dbTest() {
+  const allUsers = prisma.user.findMany();
+  (await allUsers).forEach((user) => console.log(user));
+}
+
+dbTest()
+  .catch((e) => {
+    throw e;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
 
 import handleIncomingConnection from './handleIncomingConnection';
 
