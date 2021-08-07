@@ -1,6 +1,6 @@
 # Rummy Scorekeeper
 
-A web app to keep track of scores while playing games of [21-card rummy](https://seshrs.ml/beta/21.html). The project is deployed at https://rummy.seshrs.ml.
+A web app to keep track of scores while playing games of [21-card rummy](https://sesh.rs/beta/21.html). The project is deployed at https://rummy.sesh.rs.
 
 ## Running Locally
 
