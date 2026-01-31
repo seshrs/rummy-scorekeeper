@@ -7,7 +7,7 @@ import handleIncomingConnection from './handleIncomingConnection';
 
 const app = express();
 const server = http.createServer(app);
-const io = new SocketServer(server);
+const io = new SocketServer(server, { perMessageDeflate: false });
 const PORT = 3001;
 const HEARTBEAT_INTERVAL = 45e3;
 
