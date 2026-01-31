@@ -13,6 +13,10 @@ const HEARTBEAT_INTERVAL = 45e3;
 
 const clientDir = path.join(__dirname, '../../client/build');
 app.use(express.static(clientDir));
+// Serve rules page directly
+app.get('/rules/', function (req, res) {
+  res.sendFile(path.join(clientDir, 'rules.html'));
+});
 app.get('/*', function (req, res) {
   res.sendFile(path.join(clientDir, 'index.html'));
 });

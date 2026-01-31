@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>21 Rummy Rules</title>
+<!-- End Jekyll SEO tag -->
+
+        <!-- BEGIN CUSTOM SPEC CODE -->
+        
+        <link rel="stylesheet" href="https://eecs485staff.github.io/primer-spec/assets/v1.2/css/primer-spec-base.css">
+        <link rel="preload" href="https://eecs485staff.github.io/primer-spec/assets/v1.2/js/primer_spec_plugin.min.js" as="script" crossorigin>
+        <!-- END CUSTOM SPEC CODE -->
+    </head>
+    <body>
+        <!-- Actual content -->
+        <!-- 
+            The explicit onClick handler is needed to force Safari (iOS) to propagate
+            click events for the sidebar.
+        -->
+        <div id="primer-spec-plugin-main-content" onClick="return true;">
+            
+            <h1 class="primer-spec-toc-ignore" id="21-rummy">21 Rummy</h1>
+
+<p>This game is a variation of 13-card rummy with several additional rules. As with 13-card rummy, play several rounds and try to accumulate the least amount of points across rounds. The player with the least points wins. (Often, players continue playing until someone hits a pre-determined point ceiling, say, 500 points.)</p>
+
+<p>The rules in this document describe the core version of the game. For more advanced rules, see the appendices at the end.</p>
+
+<p>Consider purchasing a <a href="https://www.amazon.com/Yellow-Mountain-Imports-Standard-Size-Playing/dp/B016XFYX5I/ref=redir_mobile_desktop?ie=UTF8&amp;aaxitk=qJsiAhIWHPNVz0hF0m8Nrg&amp;hsa_cr_id=8743692920901&amp;ref_=sbx_be_s_sparkle_mcd_asin_0">card-holder</a> to help with holding the cards. Also consider using the <a href="https://drive.google.com/file/d/1nP_kDydKdTuRviOa-nmUKjKgaQTWFrsz/view?usp=sharing">digital 21 Rummy Scorekeeper spreadsheet</a> to track scores.</p>
+
+<h2 id="victory-conditions">Victory conditions</h2>
+<ul>
+  <li>Form <code class="highlighter-rouge">sets</code> with all 21 cards in your hand (and turn the extra card face-down to declare your victory.)</li>
+  <li>At least <strong>three</strong> of these sets must be <code class="highlighter-rouge">rummies</code> or <code class="highlighter-rouge">tenalis</code>.</li>
+</ul>
+
+<h2 id="setup">Setup</h2>
+<ul>
+  <li>Combine three standard decks of cards with jokers. Shuffle well and choose a seating order.</li>
+  <li>Dealer position rotates clockwise each round.</li>
+  <li>Player to the right of the Dealer “cuts” the cards and picks a card from the decks at random to act as the <code class="highlighter-rouge">joker</code> for the round. (Place this card face-up at the end of the deck so that it is easily visible.)</li>
+  <li>Dealer deals 21 cards to each player, starting from the left going clockwise. The dealer also opens one additional card face-up to begin play.</li>
+  <li>Player to the left of the dealer begins.</li>
+</ul>
+
+<h2 id="play">Play</h2>
+<p>On their turn, a player can choose from the following actions:</p>
+<ul>
+  <li><code class="highlighter-rouge">scoot</code>: Resign from the game.
+    <ul>
+      <li>“Beginning scoot”: Scoot before playing your first round. Accumulate 30 points + any <code class="highlighter-rouge">claims</code>.</li>
+      <li>“Middle scoot”: Scoot any time after playing your first round. Accumulate 60 points + any <code class="highlighter-rouge">claims</code>.</li>
+    </ul>
+  </li>
+  <li>Play:
+    <ul>
+      <li>Take a card, either from the face-down deck of cards or the latest face-up card in the discard pile.</li>
+      <li>If you meet the <a href="#victory-conditions">victory conditions</a>, place the extra card face-down and show your cards to the other players.</li>
+      <li>Otherwise, discard a card.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="joker">Joker</h2>
+<p>The player to the right of the dealer selects the <code class="highlighter-rouge">Joker</code> while dealing. The <code class="highlighter-rouge">Joker</code> is essentially a wildcard, and can be used to form <code class="highlighter-rouge">dummies</code> or <code class="highlighter-rouge">triplets</code>/<code class="highlighter-rouge">quadruplets</code>.</p>
+
+<p>When a <code class="highlighter-rouge">Joker</code> has been selected, several cards become “jokers” (wildcards):</p>
+<ul>
+  <li>Picture-jokers (with the word “joker” on them) are <em>always</em> jokers.</li>
+  <li>Cards with the same rank as the face-up joker are also jokers.</li>
+  <li>Cards with the same suit as the face-up joker and consecutive rank to the face-up joker are also jokers.</li>
+</ul>
+
+<table>
+<tr><td>
+<strong>Example 1:</strong> Standard case
+<br /><br />
+Face-up joker: <kbd>9♥︎</kbd>
+<br /><br />
+The following are all jokers:
+<ul>
+<li>All picture-jokers</li>
+<li>All 9's (<kbd>9♣︎</kbd>, <kbd>9♦</kbd>, <kbd>9♥︎</kbd>, <kbd>9♠︎</kbd>)</li>
+<li><kbd>8♥︎</kbd>, <kbd>10♥︎</kbd></li>
+</ul>
+</td></tr>
+
+<tr><td>
+<strong>Example 2:</strong> Face-up Ace
+<br /><br />
+Face-up joker: <kbd>A♣︎</kbd>
+<br /><br />
+The following are all jokers:
+<ul>
+<li>All picture-jokers</li>
+<li>All Aces (<kbd>A♣︎</kbd>, <kbd>A♦</kbd>, <kbd>A♥︎</kbd>, <kbd>A♠︎</kbd>)</li>
+<li><kbd>K♣︎</kbd>, <kbd>2♣︎</kbd></li>
+</ul>
+</td></tr>
+
+<tr><td>
+<strong>Example 3:</strong> Face-up picture-joker
+<br /><br />
+Face-up joker: <kbd>Picture-joker</kbd>
+<br /><br />
+The following are all jokers:
+<ul>
+<li>All picture-jokers</li>
+<li>All Aces (<kbd>A♣︎</kbd>, <kbd>A♦</kbd>, <kbd>A♥︎</kbd>, <kbd>A♠︎</kbd>)</li>
+<li><kbd>K♠︎</kbd>, <kbd>2♠︎</kbd> (notice how the picture-joker is treated <em>almost</em> like an <kbd>A♠︎</kbd>)</li>
+</ul>
+</td></tr>
+</table>
+
+<h2 id="scoring">Scoring</h2>
+<p><em>Consider using the <a href="https://drive.google.com/file/d/1nP_kDydKdTuRviOa-nmUKjKgaQTWFrsz/view?usp=sharing">digital scorekeeper spreadsheet</a> to keep scores.</em></p>
+
+<p>At the end of the round, all players count their points and add it to their total.</p>
+
+<ul>
+  <li>The victorious player accumulates 0 points.</li>
+  <li>Other players count the value of their cards <strong>plus</strong> any <code class="highlighter-rouge">claims</code>.
+    <ul>
+      <li>All cards have the same value as their rank (<kbd>9♣︎</kbd> counts as 9 points), face-cards (<kbd>J</kbd>, <kbd>Q</kbd>, <kbd>K</kbd>, <kbd>A</kbd>) count as 10 points each.</li>
+      <li>If the player has three <code class="highlighter-rouge">rummies</code>/<code class="highlighter-rouge">tenalis</code>, all correctly formed sets can be excluded from the point-count.</li>
+      <li>If not, any 4+ card <code class="highlighter-rouge">rummies</code> can be excluded. <code class="highlighter-rouge">Tenalis</code> can be excluded.</li>
+      <li><code class="highlighter-rouge">Jokers</code> can be excluded.</li>
+      <li>The point-ceiling is 100 (before <code class="highlighter-rouge">claims</code>).</li>
+    </ul>
+  </li>
+  <li>Players who scooted accumulate a flat amount of points.
+    <ul>
+      <li>Beginning scoot: 30 points + claims</li>
+      <li>Middle scoot: 60 points + claims</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="claims">Claims</h3>
+<p>After a player has won the round, they calculate the value of “claim” cards in their hand. These “claim” points are then added to the scores of <em>all</em> other players (except those free of claims, see <a href="#scoring">Scoring</a>).</p>
+
+<p>All picture-jokers and jokers of the same suit as the face-up joker are “claim” cards.</p>
+<ul>
+  <li>For instance, if the face-up joker is <kbd>2♦</kbd>, then count any <kbd>A♦</kbd>, <kbd>2♦</kbd>, <kbd>3♦</kbd> or picture-jokers in your hand as “claim” cards.</li>
+  <li>If the face-up joker is the picture-joker, then count any <kbd>K♠︎</kbd>, <kbd>2♠︎</kbd> or picture-jokers in your hand as “claim” cards. (Note that <kbd>A♠︎</kbd> is <em>not</em> a “claim” card in this case.)</li>
+</ul>
+
+<p>Each “claim” card is worth 10 “claim” points. If the player has a <code class="highlighter-rouge">mini-marriage</code>, the three cards combined are worth 50 “claim” points. A <code class="highlighter-rouge">marriage</code> is worth 100 “claim” points!
+Total these “claim” points and add to other people’s scores.</p>
+
+<h2 id="definitions">Definitions</h2>
+<p>Some of the definitions listed here correspond are only used in the appendices.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">set</code>: Either a <code class="highlighter-rouge">rummy</code>, <code class="highlighter-rouge">dummy</code>, <code class="highlighter-rouge">triplet</code>/<code class="highlighter-rouge">quadruplet</code> or <code class="highlighter-rouge">tenali</code>.</li>
+  <li><code class="highlighter-rouge">rummy</code>: A set of three or more cards of the same suit of consecutive rank.
+    <ul>
+      <li>For instance, [<kbd>3♣</kbd>, <kbd>4♣</kbd>, <kbd>5♣</kbd>] is a valid rummy.</li>
+      <li>Aces can be either high or low, but <em>not both</em>. For instance, [<kbd>A♠︎</kbd>, <kbd>2♠︎</kbd>, <kbd>3♠︎</kbd>] and [<kbd>Q♠︎</kbd>, <kbd>K♠︎</kbd>, <kbd>A♠︎</kbd>] are valid rummies, but [<kbd>K♠︎</kbd>, <kbd>A♠︎</kbd>, <kbd>2♠︎</kbd>] is <strong>not</strong> valid.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">dummy</code>: A rummy, but one of the cards is substituted with a <em>Joker</em>.
+    <ul>
+      <li>For example, [<kbd>7♥︎</kbd>, <kbd>8♥︎</kbd>, <kbd>Joker</kbd>, <kbd>10♥︎</kbd>] is a valid dummy.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">triplet</code>/<code class="highlighter-rouge">quadruplet</code>: A set of three or four cards with the same rank but <em>different</em> suits. A joker may substitute any of the cards.
+    <ul>
+      <li>For example, [<kbd>7♥︎</kbd>, <kbd>7♣</kbd>, <kbd>7♠︎</kbd>, <kbd>7♦</kbd>] is a valid quadruplet.</li>
+      <li>[<kbd>5♥︎</kbd>, <kbd>5♣︎</kbd>, <kbd>5♣︎</kbd>] is NOT valid.</li>
+      <li>[<kbd>K♠︎</kbd>, <kbd>K♥︎</kbd>, <kbd>Joker</kbd>] is a valid triplet.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">tenali</code>: A set of three identical cards (with the same rank and suit).
+    <ul>
+      <li>For instance, [<kbd>7♣︎</kbd>, <kbd>7♣︎</kbd>, <kbd>7♣︎</kbd>] is a valid tenali.</li>
+      <li>[Joker, Joker, Joker] is a valid tenali only if the three cards are exactly identical (either all picture-jokers, or all three cards are the same rank/suit).</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">double</code>: Two identical cards with the same rank and suit. A <code class="highlighter-rouge">tenali</code> counts as a single double.</li>
+  <li><code class="highlighter-rouge">marriage</code>: Three <em>different</em> claim-cards of the same suit as the face-up card. Or a picture-joker-<code class="highlighter-rouge">tenali</code>. A marriage can either be considered as a <code class="highlighter-rouge">rummy</code> or used as separate jokers in other sets.
+    <ul>
+      <li>For instance, if the face-up joker is <kbd>5♥︎</kbd>, then [<kbd>4♥︎</kbd>, <kbd>5♥︎</kbd>, <kbd>6♥︎</kbd>] is a marriage.</li>
+      <li>If the face-up joker is <kbd>A♣︎</kbd>, then [<kbd>K♣︎</kbd>, <kbd>A♣︎</kbd>, <kbd>2♣︎</kbd>] is a marriage, <em>and can also be counted as a <code class="highlighter-rouge">rummy</code> if you want</em>.</li>
+      <li>If the face-up joker is the picture-joker, then [<kbd>K♠︎</kbd>, <kbd>Picture-joker</kbd>, <kbd>2♠︎</kbd>] is a marriage.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">mini-marriage</code>: A <code class="highlighter-rouge">tenali</code> consisting of jokers of the same rank as the face-up joker, but of a different suit. A mini-marriage can be considered as a <code class="highlighter-rouge">tenali</code>, or used as separate jokers in other sets.
+    <ul>
+      <li>For instance, if the face-up joker is <kbd>2♥︎</kbd>, then the <code class="highlighter-rouge">tenali</code> [<kbd>2♠︎</kbd>, <kbd>2♠︎</kbd>, <kbd>2♠︎</kbd>] is a mini-marriage.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">scoot</code>: Resigning from the round. See <a href="#play">Play</a>.</li>
+  <li><code class="highlighter-rouge">claim</code>: Additional points added to non-winners tallies at the end of each round. See <a href="#claims">Claims</a>.</li>
+  <li><code class="highlighter-rouge">joker</code>: A wildcard that can be used in <code class="highlighter-rouge">dummies</code> and <code class="highlighter-rouge">triplets</code>/<code class="highlighter-rouge">quadruplets</code>. See <a href="#joker">Joker</a>.</li>
+</ul>
+
+<hr />
+
+<p>(Consider skipping the following sections if you’re new to the game.)</p>
+
+<h2 id="appendix-a-abnormal-victory-conditions">Appendix A: “Abnormal” victory conditions</h2>
+<p>If you meet any of the following conditions, you win (and the round ends immediately):</p>
+<ul>
+  <li>Start the game with 7 <code class="highlighter-rouge">doubles</code>.</li>
+  <li>Start the game with 8 <code class="highlighter-rouge">jokers</code>.</li>
+  <li>At any point in the round, have 8 <code class="highlighter-rouge">doubles</code> in your hand.</li>
+  <li>At any point in the round, have 9 <code class="highlighter-rouge">jokers</code> in your hand.</li>
+  <li>At any point in the round, have 3 <code class="highlighter-rouge">tenalis</code>.</li>
+  <li>At any point in the round, have 2 <code class="highlighter-rouge">marriages</code> in your hand.</li>
+</ul>
+
+<p>If you meet either of the following conditions at the end of the game, you are free from points and claims — in other words, you accumulate zero points in the round, almost as though you had won the round.</p>
+<ul>
+  <li>Have 7 <code class="highlighter-rouge">doubles</code> in your hand</li>
+  <li>Have 8 <code class="highlighter-rouge">jokers</code> in your hand</li>
+</ul>
+
+<h2 id="appendix-b-wrongly-declaring-victory">Appendix B: Wrongly declaring victory</h2>
+<p>As described in <a href="#play">Play</a>, players declare their victory by placing a card face-down on the table. Then they must prove their victory by showing their cards and sets to all other players.</p>
+
+<p>The player is allowed to rearrange the 21 cards in their hands to form sets. (The card that was turned face-down <em>cannot</em> be changed.) If the 21 cards do not all form sets, then the victory was <em>incorrectly declared</em>. The player who declared incorrectly accumulates 100 points (plus claims). Other players continue playing as usual.</p>
+
+<h2 id="appendix-c-kodai-club-protocol">Appendix C: Kodai Club Protocol</h2>
+<p>These rules are often followed in addition to the above:</p>
+<ul>
+  <li>You are allowed to discard a joker on your turn. But the next player <em>is not</em> allowed to pick up that card. (Essentially, throwing a joker can be used to booby-trap the next player.)
+    <ul>
+      <li>If the next player picks up the joker and discards another card, they are forced to “middle scoot”, sit-out for the rest of the round, and accumulate 60 points + claims.</li>
+      <li>If the next player picks up the joker and declared victory, the victory is considered “wrongly declared” as described in <a href="#appendix-b-wrongly-declaring-victory">Appendix B</a>.</li>
+    </ul>
+  </li>
+  <li>After a player declared victory, other players <em>should not</em> place their own cards on the table before verifying the victory. If the victory is incorrect (as desibed in <a href="#appendix-b-wrongly-declaring-victory">Appendix B</a>), any players who have placed 3 or more cards on the table are forced to “middle scoot” and sit out the rest of the round.</li>
+</ul>
+
+
+            
+        </div> <!-- .container-lg -->
+
+        
+
+        <!-- BEGIN CUSTOM SPEC CODE -->
+        <script src="https://eecs485staff.github.io/primer-spec/assets/v1.2/js/primer_spec_plugin.min.js" crossorigin="anonymous"></script>
+        <!-- END CUSTOM SPEC CODE -->
+    </body>
+</html>
+
